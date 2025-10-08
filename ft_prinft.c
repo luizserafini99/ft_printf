@@ -6,7 +6,7 @@
 /*   By: lucavalc <lucavalc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:54:57 by lucavalc          #+#    #+#             */
-/*   Updated: 2025/10/08 15:40:36 by lucavalc         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:56:02 by lucavalc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	ft_checker_type(char c, va_list *type)
 	else if (c == 's')
 		len += ft_print_s(va_arg(*type, char *));
 	else if (c == 'd' || c == 'i')
-		len += ft_(va_arg(*type, int));
+		len += ft_print_d(va_arg(*type, int));
 	else if (c == 'u')
-		len += ft_(va_arg(*type, unsigned int));
+		len += ft_print_x(va_arg(*type, unsigned int));
 	else if (c == 'x')
 		len += ft_(va_arg(*type, unsigned int), 1);
 	else if (c == 'X')
@@ -84,4 +84,24 @@ int ft_print_s(char *str)
         }
     }
     return (i);
+}
+
+int	ft_print_d(int nb)
+{
+	long long	n;
+	int			i;
+
+	n = nb;
+	i = 0;
+	if (n < 0)
+	{
+		i += write(1, "-", 1);
+		n = -n;
+	}
+	if (n >= 10)
+	{
+		i += ft_print_number(n / 10);
+	}
+	i += ft_print_char((n % 10) + '0');
+	return (i);
 }
