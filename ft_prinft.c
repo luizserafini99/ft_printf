@@ -6,7 +6,7 @@
 /*   By: lucavalc <lucavalc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 13:54:57 by lucavalc          #+#    #+#             */
-/*   Updated: 2025/10/08 13:55:28 by lucavalc         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:40:36 by lucavalc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ int	ft_printf(char *ptr, ...)
 
     i = 0;
     len = 0;
-    va_star(type, ptr);
+    va_start(type, ptr);
 
     while(*ptr)
     {
         if(*ptr == '%' && (*ptr + 1))
         {
             ptr++;
-            len += ft_checker_type()
+            len += ft_checker_type(*ptr, &type);
         }
         else
         {
@@ -38,59 +38,50 @@ int	ft_printf(char *ptr, ...)
     va_end(type);
     return(len);
 }
-#include "ft_printf.h"
-
-int	ft_printf(char *ptr, ...)
+int	ft_checker_type(char c, va_list *type)
 {
-	int i;
-    int len;
-    va_list type;
+	int len;
 
-    i = 0;
-    len = 0;
-    va_star(type, ptr);
-
-    while(*ptr)
-    {
-        if(*ptr == '%' && (*ptr + 1))
-        {
-            ptr++;
-            len += ft_checker_type()
-        }
-        else
-        {
-            len += write(1, ptr, 1);
-            ptr++;
-        }
-    }
-    va_end(type);
-    return(len);
+	len = 0;
+	if (c == 'c')
+		len += ft_print_c(va_arg(*type, int));
+	else if (c == 's')
+		len += ft_print_s(va_arg(*type, char *));
+	else if (c == 'd' || c == 'i')
+		len += ft_(va_arg(*type, int));
+	else if (c == 'u')
+		len += ft_(va_arg(*type, unsigned int));
+	else if (c == 'x')
+		len += ft_(va_arg(*type, unsigned int), 1);
+	else if (c == 'X')
+		len += ft_(va_arg(*type, unsigned int), 2);
+	else if (c == 'p')
+		len += ft_(type);
+	else if (c == '%')
+		len += write(1, "%", 1);
+	return (len);
 }
-#include "ft_printf.h"
-
-int	ft_printf(char *ptr, ...)
+int ft_print_c(char c)
 {
-	int i;
-    int len;
-    va_list type;
+    int i;
 
-    i = 0;
-    len = 0;
-    va_star(type, ptr);
+    i = write(1, &c, 1);
+    return (i);
+}
+int ft_print_s(char *str)
+{
+    int i;
 
-    while(*ptr)
+    while(*str)
     {
-        if(*ptr == '%' && (*ptr + 1))
+        if(!str)
         {
-            ptr++;
-            len += ft_checker_type()
+            *str = "Null";
         }
         else
         {
-            len += write(1, ptr, 1);
-            ptr++;
+            i += write(1, str++, 1);
         }
     }
-    va_end(type);
-    return(len);
+    return (i);
 }
